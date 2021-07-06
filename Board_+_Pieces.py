@@ -25,17 +25,41 @@ chess_board.show_board()
 
 
 class Piece(object):
+    pieceValue = 0.0
+    name = "Default"
     
-    def __init__(self, color):
-        self.pieceValue = 0.0
+    def __init__(self, color, index = (0,0)):
         self.color = color
+        self.index = index
         
+    def allowed_moves(self):
+        self.index = (0,0)
         
+    def get_value(self):
+        return self.pieceValue
         
-"""
-Pawn:
+    def get_index(self):
+        return self.index
     
+    def set_index(self, index):
+        self.index = index
+        
+    def __str__(self):
+        return self.name + ":" + "Color: " + self.color + " Location " + self.index + " Value: " + self.pieceValue
+        
+        
+class Pawn(Piece):
+    pieceValue = 1
+    name = "Pawn"
     
+    def __init__(self, color, index):
+        Piece.__init__(color, index)
+        
+thing = Pawn("white", (1,2))
+print(thing)
+        
+   
+""" 
 Rook:
     
     
