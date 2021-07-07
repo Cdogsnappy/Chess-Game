@@ -29,9 +29,10 @@ class Piece(object):
     name = "Default"
     possible_moves = []
     
-    def __init__(self, color, index = (0,0)):
+    def __init__(self, color, board, index = (0,0)):
         self.color = color
         self.index = index
+        self.board = board
         
     def allowed_moves(self):
         return self.possible_moves
@@ -49,7 +50,7 @@ class Piece(object):
         return self.color
         
     def __str__(self):
-        return self.name + ":" + "Color: " + self.color + " Location " + str(self.index) + " Value: " + str(self.piece_value)
+        return self.name + ": " + "Color:" + self.color + " Location" + str(self.index) + " Value:" + str(self.piece_value)
         
         
 class Pawn(Piece):
@@ -66,21 +67,31 @@ class Pawn(Piece):
         temp_list= []
 
         if(self.is_first_move):
-             if(self.color == "white"):
+             if(self.color == "w"):
                  temp_list.append((y+2,x))
-             if(self.color == "black"):
+             if(self.color == "b"):
                  temp_list.append((y-2,x))
              self.is_first_move = False
-        if(self.color == "white"):
-            temp_list.append((y+1,x))
-        if(self.color == "black"):
-            temp_list.append((y-1,x))
+        if(self.color == "w"):
+            if(y != 0):
+                temp_list.append((y+1,x))
+                if(x != 0):
+                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "b"):
+                        temp_list.append((y+1,x-1))
+                if(x != 7):
+                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "b"):
+                        temp_list.append((y+1,x+1))         
+        if(self.color == "b"):
+            if(y != 7):
+                temp_list.append((y-1,x))
+                if(x != 0):
+                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "w"):
+                        temp_list.append((y-1,x-1))
+                if(x != 7):
+                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "w"):
+                        temp_list.append((y-1,x+1))     
             
-        
-        
-            
-                
-            
+
         
 thing = Pawn("white", (1,2))
 print(thing)
