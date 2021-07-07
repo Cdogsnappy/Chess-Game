@@ -95,6 +95,51 @@ class Pawn(Piece):
         
 thing = Pawn("white", (1,2))
 print(thing)
+
+
+
+
+class Rook(Piece):
+    piece_value = 5
+    name = "Rook"
+    
+    def __init(self,color,index):
+        Piece.__init__(self,color,index)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        temp_list = []
+        
+        for j in range(x-1,0):
+            if(self.board[y][j] != None):
+                temp_list.append((y,j))
+                break
+            temp_list.append((y,j))
+            
+        for j in range(x+1,9):
+            if(self.board[y][j] != None):
+                temp_list.append((y,j))
+                break
+            temp_list.append((y,j))
+            
+        for j in range(y-1,0):
+            if(self.board[j][x] != None):
+                temp_list.append((j,x))
+                break
+            temp_list.append((j,x))
+            
+        for j in range(y+1,9):
+            if(self.board[j][j] != None):
+                temp_list.append((j,x))
+                break
+            temp_list.append((j,x))
+            
+        return temp_list
+            
+            
+            
+        
         
    
 """ 
