@@ -25,18 +25,19 @@ chess_board.show_board()
 
 
 class Piece(object):
-    pieceValue = 0.0
+    piece_value = 0.0
     name = "Default"
+    possible_moves = []
     
     def __init__(self, color, index = (0,0)):
         self.color = color
         self.index = index
         
     def allowed_moves(self):
-        self.index = (0,0)
+        return self.possible_moves
         
     def get_value(self):
-        return self.pieceValue
+        return self.piece_value
         
     def get_index(self):
         return self.index
@@ -44,16 +45,42 @@ class Piece(object):
     def set_index(self, index):
         self.index = index
         
+    def get_color(self):
+        return self.color
+        
     def __str__(self):
-        return self.name + ":" + "Color: " + self.color + " Location " + self.index + " Value: " + self.pieceValue
+        return self.name + ":" + "Color: " + self.color + " Location " + str(self.index) + " Value: " + str(self.piece_value)
         
         
 class Pawn(Piece):
-    pieceValue = 1
+    is_first_move = True
+    piece_value = 1
     name = "Pawn"
     
     def __init__(self, color, index):
-        Piece.__init__(color, index)
+        Piece.__init__(self, color, index)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        temp_list= []
+
+        if(self.is_first_move):
+             if(self.color == "white"):
+                 temp_list.append((y+2,x))
+             if(self.color == "black"):
+                 temp_list.append((y-2,x))
+             self.is_first_move = False
+        if(self.color == "white"):
+            temp_list.append((y+1,x))
+        if(self.color == "black"):
+            temp_list.append((y-1,x))
+            
+        
+        
+            
+                
+            
         
 thing = Pawn("white", (1,2))
 print(thing)
