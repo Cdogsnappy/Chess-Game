@@ -2,7 +2,7 @@
 """
 
 """
-class Board(object):
+class Board(list):
     '''
     Creates board of None objects with default size of 8
     '''
@@ -17,11 +17,7 @@ class Board(object):
     def change(self, y, x, item):
         self.board[y][x] = item
         
-chess_board = Board()
 
-chess_board.change(4, 0, 5)
-chess_board.change(7, 7, 28)
-chess_board.show_board()
 
 
 class Piece(object):
@@ -139,6 +135,103 @@ class Rook(Piece):
             
             
             
+            
+class Bishop(Piece):
+    piece_value = 3
+    name = "Bishop"
+    
+    def __init__(self,color,index,board):
+        Piece.__init__(self,color,index,board)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        iy = 8-y
+        ix = 8-x
+        temp_list = []
+        
+        
+        #up and right
+        if(ix<y):
+            for j in range(1,ix+1):
+                if(self.board[y-j][x+j] != None):
+                    temp_list.append((y-j,x+j))
+                    break
+                temp_list.append((y-j,x+j))
+                
+        elif(y<ix or y==ix):
+            for j in range(1,y+1):
+                if(self.board[y-j][x+j] != None):
+                    temp_list.append((y-j,x+j))
+                    break
+                temp_list.append((y-j,x+j))
+                
+   
+                
+        #up and left
+        if(x<y):
+            for j in range(1, x+1):
+                if(self.board[y-j][x-j] != None):
+                    temp_list.append((y-j,x-j))
+                    break
+                temp_list.append((y-j,x-j))
+                
+        elif(y<x or y==x):
+            for j in range(1, y+1):
+                if(self.board[y-j][x-j] != None):
+                    temp_list.append((y-j,x-j))
+                    break
+                temp_list.append((y-j,x-j))
+                
+
+                
+                
+        #down and right
+        if(ix<iy):
+            for j in range(1, ix+1):
+                if(self.board[y+j][x+j] != None):
+                    temp_list.append((y+j,x+j))
+                    break
+                temp_list.append((y+j,x+j))
+                
+        elif(iy<ix or iy==ix):
+            for j in range(1, iy+1):
+                if(self.board[y+j][x+j] != None):
+                    temp_list.append(y+j,x+j)
+                    break
+                temp_list.append(y+j,x+j)
+            
+                
+        #down and left
+        if(x<iy):
+            for j in range(1,x+1):
+                if(self.board[y][x-j] != None):
+                    temp_list.append((y+j,x-j))
+                    break
+                temp_list.append((y+j,x-j))
+                
+        elif(iy<x or iy==x):
+            for j in range(1, iy+1):
+                if(self.board[y+j][x-j] != None):
+                    temp_list.append((y+j,x-j))
+                    break
+                temp_list.append((y+j,x-j))
+                
+      
+                
+        return temp_list
+                
+          
+        
+chess_board = Board()
+bishop_piece = Bishop("White",(5,4), chess_board)
+chess_board.change(4, 0, 5)
+chess_board.change(7, 7, 28)
+chess_board.change(5,4, bishop_piece)
+chess_board.show_board()
+possible_moves = bishop_piece.allowed_moves()
+
+
         
         
    
