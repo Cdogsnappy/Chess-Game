@@ -73,6 +73,9 @@ class Piece(object):
         
     def allowed_moves(self):
         return self.possible_moves
+    
+    def get_name(self):
+        return self.name
         
     def get_value(self):
         return self.piece_value
@@ -425,11 +428,11 @@ chess_board = Board()
 # thing = Pawn("white", chess_board, (1,2))
 # print(thing)
 
-chess_board.nuke()
-king_piece = King("w", chess_board, (2,4))
-show_spots(chess_board, king_piece)
-chess_board.show()
+# chess_board.nuke()
+# king_piece = King("w", chess_board, (2,4))
+# show_spots(chess_board, king_piece)
+# chess_board.show()
 
-thing = Pawn("white", chess_board, (1,2))
-print(thing)
+# thing = Pawn("white", chess_board, (1,2))
+# print(thing)
 

@@ -22,8 +22,69 @@ class Game(object):
             pawn = bp.Pawn("w", board, (6,i))
             board.add(pawn)
             whites.append(pawn)
+            
+        #Rooks
+        for i in range(0,8,7):
+            rook = bp.Rook("b", board, (0,i))
+            board.add(rook)
+            blacks.append(rook)
+        for i in range(0,8,7):
+            rook = bp.Rook("w", board, (7,i))
+            board.add(rook)
+            whites.append(rook)
+            
+        #Knights
+        for i in range(1,7,5):
+            knight = bp.Knight("b", board, (0,i))
+            board.add(knight)
+            blacks.append(knight)
+        for i in range(1,7,5):
+            knight = bp.Knight("w", board, (7,i))
+            board.add(knight)
+            whites.append(knight)
+            
+        #Bishop
+        for i in range(2,7, 3):
+            bishop = bp.Bishop("b", board, (0,i))
+            board.add(bishop)
+            blacks.append(bishop)
+        for i in range(2,7, 3):
+            bishop = bp.Bishop("w", board, (7,i))
+            board.add(bishop)
+            whites.append(bishop)
+            
+        #Queens
+        queen = bp.Queen("b", board, (0,3))
+        board.add(queen)
+        blacks.append(queen)
+        queen = bp.Queen("w", board, (7,3))
+        board.add(queen)
+        whites.append(queen)
+        
+        #Kings
+        king = bp.King("b", board, (0,4))
+        board.add(king)
+        blacks.append(king)
+        king = bp.King("w", board, (7,4))
+        board.add(king)
+        whites.append(king)
 
         board.show()
+        
+        #TO TEST IF LISTS INTIALIZED CORRECTLY
+        # print("BLACK")
+        # for item in blacks:
+        #     print(item.get_name(), item.get_index())
+        # print("WHITE")
+        # for item in whites:
+        #     print(item.get_name(), item.get_index())
+        
+        '''
+        Game loop:
+        Tell user whose turn it is
+        Take input
+        if not checkmate, continue
+        '''
         
 def input_checker(move):
     print("idk what this function is please just let me push already")
@@ -66,5 +127,5 @@ if __name__ == "__main__":
     main()
         
         
-print(str(input_checker("A7:F3")))
+# print(str(input_checker("A7:F3")))
 
