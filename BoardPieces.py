@@ -325,6 +325,46 @@ class Knight(Piece):
             temp_list.append((y-2,x-1))
             
         return temp_list
+    
+    
+class King(Piece):
+    name ="King"
+    piece_value = 0
+    
+    def __init__(self,color,board,index):
+        Piece.__init__(self,color,board,index)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        temp_list = []
+        
+        if(x+1<8 and y+1<8):
+            temp_list.append((y+1,x+1))
+            
+        if(x+1<8):
+            temp_list.append((y,x+1))
+            
+        if(y+1<8):
+            temp_list.append((y+1,x))
+            
+        if(x-1>-1 and y-1>-1):
+            temp_list.append((y-1,x-1))
+    
+        if(x-1>-1):
+            temp_list.append((y,x-1))
+            
+        if(y-1>-1):
+            temp_list.append((y-1,x))
+            
+        if(x-1>-1 and y+1<8):
+            temp_list.append((y+1,x-1))
+            
+        if(x+1<8 and y-1>-1):
+            temp_list.append((y-1,x+1))
+            
+        return temp_list
+        
                 
 
 def show_spots(board, piece):
@@ -352,33 +392,12 @@ chess_board.nuke()
 show_spots(chess_board.board, knight_piece)
 chess_board.show()
 
+
+chess_board.nuke()
+king_piece = King("w", chess_board.board, (0,4))
+show_spots(chess_board.board, king_piece)
+chess_board.show()
+
 thing = Pawn("white", chess_board, (1,2))
 print(thing)
 
-
-            
-    
-    
-   
-""" 
-Rook:
-    
-    
-    
-Bishop:
-    
-
-    
-Knight:
-    
-    
-    
-King:
-    
-    
-    
-Queen:
-    
-    
-"""
-    
