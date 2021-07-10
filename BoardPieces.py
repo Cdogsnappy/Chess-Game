@@ -11,24 +11,42 @@ class Board(object):
         self.size = size
         
     def show(self):
-        row_template = "{:^8}|"
-        #need a cleaner way to print
+        print(end="   ")
+        for i in range(65, 65+self.size):
+            print("{:^10}".format(chr(i)), end="")
+        print()
+        num = 8
         for row in self.board:
-            print("|", end="")
+            print(str(num) + " |", end="")           #COLOR
+            num-=1
             for item in row:
                 if(item == None):
-                    item = "----"
-                print(row_template.format(item), end="")
+                    item = "-----"
+                if(type(item) != str and item.get_color() == "w"):
+                    print('\033[38m' , end="")
+                if(type(item) != str and item.get_color() == "b"):
+                    print('\033[35m' , end="")
+                print("{:^9}".format(str(item)), end="")
+                print('\033[m|', end="")
             print()
-            
-    def change(self, y, x, item):
-        self.board[y][x] = item
+    
+    def add(self, item):
+        self.board[item.get_index()[0]][item.get_index()[1]] = item
+    
+    def change(self, item, index):
+        self.board[item.get_index()[0]][item.get_index()[1]] = None
+        self.board[index[0]][index[1]] = item
+        
+    def remove(self, item):
+        self.board[item.get_index()[0]][item.get_index()[1]] = None
         
     def nuke(self):
         for y in range(self.size):
             for x in range(self.size):
                 self.board[y][x] = None
-                
+            
+    def get_board(self):
+        return self.board
 
 
 class Piece(object):
@@ -36,7 +54,12 @@ class Piece(object):
     name = "Default"
     possible_moves = []
     
-    def __init__(self, color, board, index = (0,0)):
+    def __init__(self, color, board, index):
+        """
+        color: string "b" or "w"
+        board: board object that it is operating on
+        index : tuple (y,x)
+        """
         self.color = color
         self.index = index
         self.board = board
@@ -57,8 +80,8 @@ class Piece(object):
         return self.color
         
     def __str__(self):
-        return self.name + ": " + "Color:" + self.color + " Location" + str(self.index) + " Value:" + str(self.piece_value)
-        
+        return self.name
+
         
 class Pawn(Piece):
     is_first_move = True
@@ -329,31 +352,31 @@ class Knight(Piece):
 
 def show_spots(board, piece):
     tempindex = piece.get_index()
-    chess_board.change(tempindex[0], tempindex[1], 1)
+    board.change(tempindex[0], tempindex[1], 1)
     for space in piece.allowed_moves():
-        chess_board.change(space[0], space[1], 0)
+        board.change(space[0], space[1], 0)
         
-chess_board = Board()
-bishop_piece = Bishop("w", chess_board.board, (3,4))
-knight_piece = Knight("w", chess_board.board,(5,5))
+# chess_board = Board()
+# bishop_piece = Bishop("w", chess_board.board, (3,4))
+# knight_piece = Knight("w", chess_board.board,(5,5))
 # chess_board.change(4, 0, 5)
 # chess_board.change(7, 7, 28)
 # chess_board.change(5,4, bishop_piece)
-show_spots(chess_board.board, bishop_piece)
-chess_board.show()
+# show_spots(chess_board.board, bishop_piece)
+# chess_board.show()
 
-print()
-chess_board.nuke()
-rook_piece = Rook("w", chess_board.board,(7,1))
-show_spots(chess_board.board, rook_piece)
-chess_board.show()
+# print()
+# chess_board.nuke()
+# rook_piece = Rook("w", chess_board.board,(7,1))
+# show_spots(chess_board.board, rook_piece)
+# chess_board.show()
 
-chess_board.nuke()
-show_spots(chess_board.board, knight_piece)
-chess_board.show()
+# chess_board.nuke()
+# show_spots(chess_board.board, knight_piece)
+# chess_board.show()
 
-thing = Pawn("white", chess_board, (1,2))
-print(thing)
+# thing = Pawn("white", chess_board, (1,2))
+# print(thing)
 
 
             
