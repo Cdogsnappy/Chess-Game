@@ -7,33 +7,37 @@ Created on Sat Jul 10 12:20:15 2021
 
 import BoardPieces
 
-def input_checker(move):
+def move_input():
     
+    move = input("what is your move?")
     first_coord = (0,0)
     second_coord = (0,0)
     
     while(True):
         try:
-            assert move[0].isalpha() and move[1].isalnum() and move[3] ==":" and move[4].isalpha() and move[5].isalnum()
+            assert move[0].isalpha() and move[1].isdigit() and move[2] ==":" and move[3].isalpha() and move[4].isdigit()
             
             switcher={
-                "a" or "A" : 0,
-                "b" or "B" : 1,
-                "c" or "C" : 2,
-                "d" or "D" : 3,
-                "e" or "E" : 4,
-                "f" or "F" : 5,
-                "g" or "G" : 6,
-                "h" or "H" : 7
+                "A" : 0,
+                "B" : 1,
+                "C" : 2,
+                "D" : 3,
+                "E" : 4,
+                "F" : 5,
+                "G" : 6,
+                "H" : 7
                 }
             
             first_coord = (int(move[1]),switcher.get(move[0]))
-            second_coord = (int(move[4]),switcher.get(move[5]))
+            second_coord = (int(move[4]),switcher.get(move[3]))
             
             return [first_coord,second_coord]
         
         except(AssertionError):
             print("There was an error, please try again")
+            move = input("What is your move?")
             continue
-                
-    
+        
+        
+print(str(input_checker("A7:F3")))
+                    
