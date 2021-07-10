@@ -11,9 +11,15 @@ class Board(object):
         self.size = size
         
     def show(self):
+        row_template = "{:^8}|"
         #need a cleaner way to print
         for row in self.board:
-            print(row)
+            print("|", end="")
+            for item in row:
+                if(item == None):
+                    item = "----"
+                print(row_template.format(item), end="")
+            print()
             
     def change(self, y, x, item):
         self.board[y][x] = item
@@ -209,6 +215,7 @@ bishop_piece = Bishop("w", chess_board.board, (3,4))
 show_spots(chess_board.board, bishop_piece)
 chess_board.show()
 
+print()
 chess_board.nuke()
 rook_piece = Rook("w", chess_board.board,(7,1))
 show_spots(chess_board.board, rook_piece)
