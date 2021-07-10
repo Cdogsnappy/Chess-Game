@@ -92,37 +92,48 @@ class Rook(Piece):
     piece_value = 5
     name = "Rook"
     
-    def __init(self,color,index):
+    def __init(self,color,board,index):
         Piece.__init__(self,color, board, index)
         
     def allowed_moves(self):
         y = self.index[0]
         x = self.index[1]
+        j = 0
         temp_list = []
         
-        for j in range(x-1,0):
-            if(self.board[y][j] != None):
-                temp_list.append((y,j))
+        while x-j>0:
+            j+=1
+            if(self.board[y][x-j] != None):
+                temp_list.append((y,x-j))
                 break
-            temp_list.append((y,j))
+            temp_list.append((y,x-j))
+        j=0
+        
+        while x+j<7:
+            j+=1
+            if(self.board[y][x+j] != None):
+                temp_list.append((y,x+j))
+                break
+            temp_list.append((y,x+j))
             
-        for j in range(x+1,9):
-            if(self.board[y][j] != None):
-                temp_list.append((y,j))
-                break
-            temp_list.append((y,j))
+        j=0
             
-        for j in range(y-1,0):
-            if(self.board[j][x] != None):
-                temp_list.append((j,x))
+        while y-j>0:
+            j+=1
+            if(self.board[y-j][x] != None):
+                temp_list.append((y-j,x))
                 break
-            temp_list.append((j,x))
+            temp_list.append((y-j,x))
             
-        for j in range(y+1,9):
-            if(self.board[j][j] != None):
-                temp_list.append((j,x))
+        j=0
+            
+        while y+j<7:
+            j+=1
+            if(self.board[y+j][x] != None):
+                temp_list.append((y+j,x))
                 break
-            temp_list.append((j,x))
+            temp_list.append((y+j,x))
+        
             
         return temp_list
             
@@ -188,11 +199,12 @@ def show_spots(board, piece):
         chess_board.change(space[0], space[1], 0)
         
 chess_board = Board()
-bishop_piece = Bishop("w", chess_board.board, (3,4))
+ #bishop_piece = Bishop("w", chess_board.board, (3,4))
+rook_piece = Rook("w", chess_board.board,(7,1))
 # chess_board.change(4, 0, 5)
 # chess_board.change(7, 7, 28)
 # chess_board.change(5,4, bishop_piece)
-show_spots(chess_board.board, bishop_piece)
+show_spots(chess_board.board, rook_piece)
 chess_board.show_board()
 
 thing = Pawn("white", chess_board, (1,2))
