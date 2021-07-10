@@ -8,6 +8,7 @@ class Board(object):
     '''
     def __init__(self, size=8):
         self.board = [[None for _ in range(size)] for _ in range(size)]
+        self.size = size
         
     def show(self):
         #need a cleaner way to print
@@ -18,8 +19,9 @@ class Board(object):
         self.board[y][x] = item
         
     def nuke(self):
-        size = len(self.board)
-        self.board = [[None for _ in range(size)] for _ in range(size)]
+        for y in range(self.size):
+            for x in range(self.size):
+                self.board[y][x] = None
                 
 
 
@@ -94,15 +96,51 @@ class Pawn(Piece):
 class Rook(Piece):
     piece_value = 5
     name = "Rook"
-    
-    def __init(self,color, board, index):
+
+    def __init(self,color,board,index):
         Piece.__init__(self,color, board, index)
         
     def allowed_moves(self):
         y = self.index[0]
         x = self.index[1]
-        j=0
+        j = 0
         temp_list = []
+        
+        while x-j>0:
+            j+=1
+            if(self.board[y][x-j] != None):
+                temp_list.append((y,x-j))
+                break
+            temp_list.append((y,x-j))
+        j=0
+        
+        while x+j<7:
+            j+=1
+            if(self.board[y][x+j] != None):
+                temp_list.append((y,x+j))
+                break
+            temp_list.append((y,x+j))
+            
+        j=0
+            
+        while y-j>0:
+            j+=1
+            if(self.board[y-j][x] != None):
+                temp_list.append((y-j,x))
+                break
+            temp_list.append((y-j,x))
+            
+        j=0
+            
+        while y+j<7:
+            j+=1
+            if(self.board[y+j][x] != None):
+                temp_list.append((y+j,x))
+                break
+            temp_list.append((y+j,x))
+        
+            
+        return temp_list
             
             
 class Bishop(Piece):
@@ -172,8 +210,8 @@ show_spots(chess_board.board, bishop_piece)
 chess_board.show()
 
 chess_board.nuke()
-rook = Rook("w", chess_board.board, (2,2))
-show_spots(chess_board.board, rook)
+rook_piece = Rook("w", chess_board.board,(7,1))
+show_spots(chess_board.board, rook_piece)
 chess_board.show()
 
 thing = Pawn("white", chess_board, (1,2))
