@@ -193,6 +193,132 @@ class Bishop(Piece):
       
                 
         return temp_list
+    
+    
+class Queen(Piece):
+    name = "Queen"
+    piece_value = 9
+    
+    def __init__(self,color,board,index):
+        Piece.__init__(self,color,board,index)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        j = 0
+        temp_list = []
+        
+         #Up and right
+        while(y-j>0 and x+j<7):
+            j+=1
+            if(self.board[y-j][x+j] != None):
+                temp_list.append((y-j,x+j))
+                break
+            temp_list.append((y-j,x+j))
+            
+        j=0
+        #Up and left
+        while(y-j>0 and x-j>0):
+            j+=1
+            if(self.board[y-j][x-j] != None):
+                temp_list.append((y-j,x-j))
+                break
+            temp_list.append((y-j,x-j))
+            
+        j=0
+        #Down and left
+        while(y+j<7 and x-j>0):
+            j+=1
+            if(self.board[y+j][x-j] != None):
+                temp_list.append((y+j,x-j))
+                break
+            temp_list.append((y+j,x-j))
+            
+        j=0
+        #Down and right
+        while(y+j<7 and x+j<7):
+            j+=1
+            if(self.board[y+j][x+j] != None):
+                temp_list.append((y+j,x+j))
+                break
+            temp_list.append((y+j,x+j))
+            
+            j = 0
+            
+        while x-j>0:
+            j+=1
+            if(self.board[y][x-j] != None):
+                temp_list.append((y,x-j))
+                break
+            temp_list.append((y,x-j))
+        j=0
+        
+        while x+j<7:
+            j+=1
+            if(self.board[y][x+j] != None):
+                temp_list.append((y,x+j))
+                break
+            temp_list.append((y,x+j))
+            
+        j=0
+            
+        while y-j>0:
+            j+=1
+            if(self.board[y-j][x] != None):
+                temp_list.append((y-j,x))
+                break
+            temp_list.append((y-j,x))
+            
+        j=0
+            
+        while y+j<7:
+            j+=1
+            if(self.board[y+j][x] != None):
+                temp_list.append((y+j,x))
+                break
+            temp_list.append((y+j,x))
+        
+        return temp_list
+    
+    
+    
+class Knight(Piece):
+    name = "Knight"
+    piece_value = 3
+    
+    def __init__(self, color, board, index):
+        Piece.__init__(self, color,board,index)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        temp_list = []
+        
+        if(x+2<8 and y+1<8):
+            temp_list.append((y+1,x+2))
+            
+        if(x+1<8 and y+2<8):
+            temp_list.append((y+2,x+1))
+            
+        if(x+2<8 and y-1>-1):
+            temp_list.append((y-1,x+2))
+            
+        if(x-2>-1 and y-1>-1):
+            temp_list.append((y-1,x-2))
+            
+        if(x-2>-1 and y+1<8):
+            temp_list.append((y+1,x-2))
+            
+        if(x+1<8 and y-2>-1):
+            temp_list.append((y-2,x+1))
+            
+        if(x-1>-1 and y+2<8):
+            temp_list.append((y+2,x-1))
+            
+        if(x-1>-1 and y-2>-1):
+            temp_list.append((y-2,x-1))
+            
+        return temp_list
                 
 
 def show_spots(board, piece):
@@ -203,6 +329,7 @@ def show_spots(board, piece):
         
 chess_board = Board()
 bishop_piece = Bishop("w", chess_board.board, (3,4))
+knight_piece = Knight("w", chess_board.board,(5,5))
 # chess_board.change(4, 0, 5)
 # chess_board.change(7, 7, 28)
 # chess_board.change(5,4, bishop_piece)
@@ -214,12 +341,17 @@ rook_piece = Rook("w", chess_board.board,(7,1))
 show_spots(chess_board.board, rook_piece)
 chess_board.show()
 
+chess_board.nuke()
+show_spots(chess_board.board, knight_piece)
+chess_board.show()
+
 thing = Pawn("white", chess_board, (1,2))
 print(thing)
 
 
-        
-        
+            
+    
+    
    
 """ 
 Rook:
@@ -228,7 +360,7 @@ Rook:
     
 Bishop:
     
-    
+
     
 Knight:
     
