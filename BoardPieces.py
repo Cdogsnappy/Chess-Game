@@ -22,16 +22,23 @@ class Board(object):
             for item in row:
                 if(item == None):
                     item = "-----"
-                if(type(item) != str and item.get_color() == "w"):
+                if(type(item) != str and type(item) != int and item.get_color() == "w"):
                     print('\033[38m' , end="")
-                if(type(item) != str and item.get_color() == "b"):
+                if(type(item) != str and type(item) != int and item.get_color() == "b"):
                     print('\033[35m' , end="")
                 print("{:^9}".format(str(item)), end="")
                 print('\033[m|', end="")
             print()
     
-    def add(self, item):
-        self.board[item.get_index()[0]][item.get_index()[1]] = item
+    def add(self, item, index=(-1,-1)):
+        '''
+        If the item is not a piece, must include index
+        '''
+        try: 
+            self.board[item.get_index()[0]][item.get_index()[1]] = item
+        except:
+            self.board[index[0]][index[1]] = item
+            
     
     def change(self, item, index):
         self.board[item.get_index()[0]][item.get_index()[1]] = None
@@ -348,15 +355,55 @@ class Knight(Piece):
             temp_list.append((y-2,x-1))
             
         return temp_list
+    
+    
+class King(Piece):
+    name ="King"
+    piece_value = 0
+    
+    def __init__(self,color,board,index):
+        Piece.__init__(self,color,board,index)
+        
+    def allowed_moves(self):
+        y = self.index[0]
+        x = self.index[1]
+        temp_list = []
+        
+        if(x+1<8 and y+1<8):
+            temp_list.append((y+1,x+1))
+            
+        if(x+1<8):
+            temp_list.append((y,x+1))
+            
+        if(y+1<8):
+            temp_list.append((y+1,x))
+            
+        if(x-1>-1 and y-1>-1):
+            temp_list.append((y-1,x-1))
+    
+        if(x-1>-1):
+            temp_list.append((y,x-1))
+            
+        if(y-1>-1):
+            temp_list.append((y-1,x))
+            
+        if(x-1>-1 and y+1<8):
+            temp_list.append((y+1,x-1))
+            
+        if(x+1<8 and y-1>-1):
+            temp_list.append((y-1,x+1))
+            
+        return temp_list
+        
                 
 
 def show_spots(board, piece):
     tempindex = piece.get_index()
-    board.change(tempindex[0], tempindex[1], 1)
+    board.add(1, tempindex)
     for space in piece.allowed_moves():
-        board.change(space[0], space[1], 0)
+        board.add(0, (space[0],space[1]))
         
-# chess_board = Board()
+chess_board = Board()
 # bishop_piece = Bishop("w", chess_board.board, (3,4))
 # knight_piece = Knight("w", chess_board.board,(5,5))
 # chess_board.change(4, 0, 5)
@@ -378,30 +425,11 @@ def show_spots(board, piece):
 # thing = Pawn("white", chess_board, (1,2))
 # print(thing)
 
+chess_board.nuke()
+king_piece = King("w", chess_board, (2,4))
+show_spots(chess_board, king_piece)
+chess_board.show()
 
-            
-    
-    
-   
-""" 
-Rook:
-    
-    
-    
-Bishop:
-    
+thing = Pawn("white", chess_board, (1,2))
+print(thing)
 
-    
-Knight:
-    
-    
-    
-King:
-    
-    
-    
-Queen:
-    
-    
-"""
-    
