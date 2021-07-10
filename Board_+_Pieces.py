@@ -2,7 +2,7 @@
 """
 
 """
-class Board(list):
+class Board(object):
     '''
     Creates board of None objects with default size of 8
     '''
@@ -54,8 +54,8 @@ class Pawn(Piece):
     piece_value = 1
     name = "Pawn"
     
-    def __init__(self, color, index):
-        Piece.__init__(self, color, index)
+    def __init__(self, color, board, index):
+        Piece.__init__(self, color, board, index)
         
     def allowed_moves(self):
         y = self.index[0]
@@ -86,13 +86,6 @@ class Pawn(Piece):
                 if(x != 7):
                     if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "w"):
                         temp_list.append((y-1,x+1))     
-            
-
-        
-thing = Pawn("white", (1,2))
-print(thing)
-
-
 
 
 class Rook(Piece):
@@ -100,7 +93,7 @@ class Rook(Piece):
     name = "Rook"
     
     def __init(self,color,index):
-        Piece.__init__(self,color,index)
+        Piece.__init__(self,color, board, index)
         
     def allowed_moves(self):
         y = self.index[0]
@@ -140,96 +133,70 @@ class Bishop(Piece):
     piece_value = 3
     name = "Bishop"
     
-    def __init__(self,color,index,board):
-        Piece.__init__(self,color,index,board)
+    def __init__(self,color, board, index):
+        Piece.__init__(self,color, board, index)
         
     def allowed_moves(self):
         y = self.index[0]
         x = self.index[1]
-        iy = 8-y
-        ix = 8-x
+        j = 0
         temp_list = []
         
-        
-        #up and right
-        if(ix<y):
-            for j in range(1,ix+1):
-                if(self.board[y-j][x+j] != None):
-                    temp_list.append((y-j,x+j))
-                    break
+        #Up and right
+        while(y-j>0 and x+j<7):
+            j+=1
+            if(self.board[y-j][x+j] != None):
                 temp_list.append((y-j,x+j))
-                
-        elif(y<ix or y==ix):
-            for j in range(1,y+1):
-                if(self.board[y-j][x+j] != None):
-                    temp_list.append((y-j,x+j))
-                    break
-                temp_list.append((y-j,x+j))
-                
-   
-                
-        #up and left
-        if(x<y):
-            for j in range(1, x+1):
-                if(self.board[y-j][x-j] != None):
-                    temp_list.append((y-j,x-j))
-                    break
-                temp_list.append((y-j,x-j))
-                
-        elif(y<x or y==x):
-            for j in range(1, y+1):
-                if(self.board[y-j][x-j] != None):
-                    temp_list.append((y-j,x-j))
-                    break
-                temp_list.append((y-j,x-j))
-                
-
-                
-                
-        #down and right
-        if(ix<iy):
-            for j in range(1, ix+1):
-                if(self.board[y+j][x+j] != None):
-                    temp_list.append((y+j,x+j))
-                    break
-                temp_list.append((y+j,x+j))
-                
-        elif(iy<ix or iy==ix):
-            for j in range(1, iy+1):
-                if(self.board[y+j][x+j] != None):
-                    temp_list.append(y+j,x+j)
-                    break
-                temp_list.append(y+j,x+j)
+                break
+            temp_list.append((y-j,x+j))
             
-                
-        #down and left
-        if(x<iy):
-            for j in range(1,x+1):
-                if(self.board[y][x-j] != None):
-                    temp_list.append((y+j,x-j))
-                    break
+        j=0
+        #Up and left
+        while(y-j>0 and x-j>0):
+            j+=1
+            if(self.board[y-j][x-j] != None):
+                temp_list.append((y-j,x-j))
+                break
+            temp_list.append((y-j,x-j))
+            
+        j=0
+        #Down and left
+        while(y+j<7 and x-j>0):
+            j+=1
+            if(self.board[y+j][x-j] != None):
                 temp_list.append((y+j,x-j))
-                
-        elif(iy<x or iy==x):
-            for j in range(1, iy+1):
-                if(self.board[y+j][x-j] != None):
-                    temp_list.append((y+j,x-j))
-                    break
-                temp_list.append((y+j,x-j))
-                
+                break
+            temp_list.append((y+j,x-j))
+            
+        j=0
+        #Down and right
+        while(y+j<7 and x+j<7):
+            j+=1
+            if(self.board[y+j][x+j] != None):
+                temp_list.append((y+j,x+j))
+                break
+            temp_list.append((y+j,x+j))
       
                 
         return temp_list
                 
-          
+
+def show_spots(board, piece):
+    tempindex = piece.get_index()
+    chess_board.change(tempindex[0], tempindex[1], 1)
+    for space in piece.allowed_moves():
+        chess_board.change(space[0], space[1], 0)
         
 chess_board = Board()
-bishop_piece = Bishop("White",(5,4), chess_board)
-chess_board.change(4, 0, 5)
-chess_board.change(7, 7, 28)
-chess_board.change(5,4, bishop_piece)
+bishop_piece = Bishop("w", chess_board.board, (3,4))
+# chess_board.change(4, 0, 5)
+# chess_board.change(7, 7, 28)
+# chess_board.change(5,4, bishop_piece)
+show_spots(chess_board.board, bishop_piece)
 chess_board.show_board()
-possible_moves = bishop_piece.allowed_moves()
+
+thing = Pawn("white", chess_board, (1,2))
+print(thing)
 
 
         
