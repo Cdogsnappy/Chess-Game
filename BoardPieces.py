@@ -136,7 +136,7 @@ class Rook(Piece):
     piece_value = 5
     name = "Rook"
 
-    def __init(self,color,board,index):
+    def __init__(self,color,board,index):
         Piece.__init__(self,color, board, index)
         
     def allowed_moves(self):

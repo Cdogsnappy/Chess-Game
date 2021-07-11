@@ -8,7 +8,7 @@ Created on Sat Jul 10 12:20:15 2021
 import BoardPieces as bp
 
 class Game(object):
-    def run():
+    def run_console():
         board = bp.Board()
         whites = []
         blacks = []
@@ -18,7 +18,6 @@ class Game(object):
             pawn = bp.Pawn("b", board, (1,i))
             board.add(pawn)
             blacks.append(pawn)
-        for i in range(len(board.get_board()[6])):
             pawn = bp.Pawn("w", board, (6,i))
             board.add(pawn)
             whites.append(pawn)
@@ -28,7 +27,6 @@ class Game(object):
             rook = bp.Rook("b", board, (0,i))
             board.add(rook)
             blacks.append(rook)
-        for i in range(0,8,7):
             rook = bp.Rook("w", board, (7,i))
             board.add(rook)
             whites.append(rook)
@@ -38,7 +36,6 @@ class Game(object):
             knight = bp.Knight("b", board, (0,i))
             board.add(knight)
             blacks.append(knight)
-        for i in range(1,7,5):
             knight = bp.Knight("w", board, (7,i))
             board.add(knight)
             whites.append(knight)
@@ -48,7 +45,6 @@ class Game(object):
             bishop = bp.Bishop("b", board, (0,i))
             board.add(bishop)
             blacks.append(bishop)
-        for i in range(2,7, 3):
             bishop = bp.Bishop("w", board, (7,i))
             board.add(bishop)
             whites.append(bishop)
@@ -70,6 +66,8 @@ class Game(object):
         whites.append(king)
 
         board.show()
+        '''Should we just have the pieces be represented by the first initial
+        instead of the whole word?'''
         
         #TO TEST IF LISTS INTIALIZED CORRECTLY
         # print("BLACK")
@@ -85,6 +83,9 @@ class Game(object):
         Take input
         if not checkmate, continue
         '''
+        
+    def run_gui():
+        "".split()
         
 def input_checker(move):
     print("idk what this function is please just let me push already")
@@ -121,7 +122,7 @@ def move_input():
             continue
     
 def main():
-    Game.run()
+    Game.run_console()
 
 if __name__ == "__main__":
     main()
