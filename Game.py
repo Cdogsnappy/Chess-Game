@@ -8,6 +8,83 @@ Created on Sat Jul 10 12:20:15 2021
 import BoardPieces as bp
 
 class Game(object):
+    move_number = 0
+    
+    def move(board, move_set):
+        count = 0
+        move_list = board.board[move_set[1]][move_set[0]].allowed_moves()
+        move_to = (move_set[3],move_set[2])
+        for j in range(len(move_list)):
+            if(move_list[j] == move_to):
+                count+=1
+                
+        if(count == 0):
+            board.board[move_set[3]][move_set[2]] = board.board[move_set[1]][move_set[0]]
+            board.board[move_set[1]][move_set[0]] = None
+            Game.move_number+=1
+            
+        else:
+            print("That move is not allowed.")
+            
+            
+            
+            
+    def attack(board, move_set):
+        
+        count = 0
+        move_list = board.board[move_set[1]][move_set[0]].allowed_moves()
+        move_to = (move_set[3],move_set[2])
+        for j in range(len(move_list)):
+            if(move_list[j] == move_to):
+                count+=1
+                
+        if(count == 0):
+            dead_piece = board.board[move_set[3]][move_set[2]]
+            if(board.board[move_set[1]][move_set[0]].get_color == "w"):
+                for j in range(len(Game.blacks)):
+                    if(Game.blacks[j] == dead_piece):
+                        Game.blacks.remove[j]
+                        
+            if(board.board[move_set[1]][move_set[0]].get_color == "b"):
+                for j in range(len(Game.whites)):
+                    if(Game.whites[j] == dead_piece):
+                        Game.whites.remove[j]
+                        
+            board.board[move_set[3]][move_set[2]] = board.board[move_set[1]][move_set[0]]
+            board.board[move_set[1]][move_set[0]] = None
+            Game.move_number+=1
+            
+        else:
+            print("That move is not allowed.")
+            
+            
+  
+    def move_input():
+    
+        move = input("what is your move?")
+    
+        while(True):
+            try:
+                assert move[0].isalpha() and move[1].isdigit() and move[2] ==":" and move[3].isalpha() and move[4].isdigit()
+               
+                switcher={
+                    "A" : 0,
+                    "B" : 1,
+                    "C" : 2,
+                    "D" : 3,
+                    "E" : 4,
+                    "F" : 5,
+                    "G" : 6,
+                    "H" : 7
+                    }
+            
+                return [int(move[1]),switcher.get(move[0]),int(move[4]),switcher.get(move[3])]
+        
+            except(AssertionError):
+                print("There was an error, please try again")
+                move = input("What is your move?")
+                continue
+        
     def run_console():
         board = bp.Board()
         whites = []
@@ -84,42 +161,45 @@ class Game(object):
         if not checkmate, continue
         '''
         
+        
+        while(Game.is_checkmate() == None):
+            "is_checkmate will return None if no checkmate, otherwise it will return the color of the king that is checkmated."
+            if(Game.move_number%2 == 0):
+                print("It is white's turn")
+                move_set = Game.move_input()
+                if(board.board[move_set[1]][move_set[0]].get_color == "w"):
+                    if(board.board[move_set[3]][move_set[2]] == None):
+                        Game.move(board, move_set)
+                    if(board.board[move_set[3]][move_set[2]].get_color == "b"):
+                        Game.attack(board, move_set)
+                    else:
+                        print("You cannot attack your own piece.")
+                else:
+                    print("You must pick a white piece.")
+                    
+               
+                
+            if(Game.move_number % 2 != 0):
+                print("It is black's turn")
+                move_set = Game.move_input()
+                if(board.board[move_set[1]][move_set[0]].get_color == "w"):
+                    if(board.board[move_set[3]][move_set[2]] == None):
+                        Game.move(move_set)
+                    if(board.board[move_set[3]][move_set[2]].get_color == "b"):
+                        Game.attack(move_set)
+                    else:
+                        print("You cannot attack your own piece.")
+                        continue
+                else:
+                    print("You must pick a black piece.")
+                    continue
+                
+            
+            
+        
     def run_gui():
         "".split()
         
-def input_checker(move):
-    print("idk what this function is please just let me push already")
-    
-def move_input():
-    
-    move = input("what is your move?")
-    first_coord = (0,0)
-    second_coord = (0,0)
-    
-    while(True):
-        try:
-            assert move[0].isalpha() and move[1].isdigit() and move[2] ==":" and move[3].isalpha() and move[4].isdigit()
-            
-            switcher={
-                "A" : 0,
-                "B" : 1,
-                "C" : 2,
-                "D" : 3,
-                "E" : 4,
-                "F" : 5,
-                "G" : 6,
-                "H" : 7
-                }
-            
-            first_coord = (int(move[1]),switcher.get(move[0]))
-            second_coord = (int(move[4]),switcher.get(move[3]))
-            
-            return [first_coord,second_coord]
-        
-        except(AssertionError):
-            print("There was an error, please try again")
-            move = input("What is your move?")
-            continue
     
 def main():
     Game.run_console()
