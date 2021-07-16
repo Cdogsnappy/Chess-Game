@@ -9,6 +9,8 @@ import BoardPieces as bp
 
 class Game(object):
     move_number = 0
+    whites = []
+    blacks = []
     
     def move(board, move_set):
         count = 0
@@ -61,7 +63,7 @@ class Game(object):
   
     def move_input():
     
-        move = input("what is your move?")
+        move = input("what is your move? ")
     
         while(True):
             try:
@@ -78,17 +80,29 @@ class Game(object):
                     "H" : 7
                     }
             
-                return [int(move[1]),switcher.get(move[0]),int(move[4]),switcher.get(move[3])]
+                return [8-int(move[1]),switcher.get(move[0]),8-int(move[4]),switcher.get(move[3])]
         
             except(AssertionError):
                 print("There was an error, please try again")
-                move = input("What is your move?")
+                move = input("What is your move? ")
                 continue
+            
+    def is_check():
+        '''
+        If the opposite color king is in your allowed_moves, signal a check
+        '''
+    
+    def is_checkmate():
+        '''
+        If it is a player's turn and the king has no available moves
+        and is in an allowed_moves of an opposite color piece
+        and recalculating every possible move of other pieces would not release the check
+        return True
+        '''
+        "".split()
         
     def run_console():
         board = bp.Board()
-        whites = []
-        blacks = []
         
         #Create Pawns
         for i in range(len(board.get_board()[1])):
