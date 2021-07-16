@@ -11,19 +11,35 @@ class Game(object):
     move_number = 0
     whites = []
     blacks = []
+    board = bp.Board()
+    wking = bp.Piece("w", board, (-1,-1))
+    bking = bp.Piece("b", board, (-1,-1))
     
     def move(board, move_set):
+        '''
+        Checks if the piece is allowed to move on that turn
+        Checks if move is in allowed moves
+        Then moves piece on board
+        '''
         count = 0
-        move_list = board.board[move_set[1]][move_set[0]].allowed_moves()
-        move_to = (move_set[3],move_set[2])
-        for j in range(len(move_list)):
-            if(move_list[j] == move_to):
-                count+=1
+        if(Game.move_number%2 == 0 and Game.board.get_board()[move_set[0]][move_set[1]].get_color() != "w"):
+            print("That move is out of turn.")
+            return None
+        if(Game.move_number%2 == 1 and Game.board.get_board()[move_set[0]][move_set[1]].get_color() != "b"):
+            print("That move is out of turn.")
+            return None
+             
+        allowed_moves = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
+        move_to = (move_set[2],move_set[3])
+        if(move_to in allowed_moves):
+            count+=1
                 
-        if(count == 0):
-            board.board[move_set[3]][move_set[2]] = board.board[move_set[1]][move_set[0]]
-            board.board[move_set[1]][move_set[0]] = None
+        if(count == 1):
+            Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[0]][move_set[1]]
+            Game.board.get_board()[move_set[2]][move_set[3]].set_index((move_set[1], move_set[0]))
+            Game.board.get_board()[move_set[0]][move_set[1]] = None
             Game.move_number+=1
+            Game.board.show()
             
         else:
             print("That move is not allowed.")
@@ -34,27 +50,28 @@ class Game(object):
     def attack(board, move_set):
         
         count = 0
-        move_list = board.board[move_set[1]][move_set[0]].allowed_moves()
-        move_to = (move_set[3],move_set[2])
+        move_list = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
+        move_to = (move_set[2],move_set[3])
         for j in range(len(move_list)):
             if(move_list[j] == move_to):
                 count+=1
                 
         if(count == 0):
-            dead_piece = board.board[move_set[3]][move_set[2]]
-            if(board.board[move_set[1]][move_set[0]].get_color == "w"):
+            dead_piece = Game.board.get_board()[move_set[2]][move_set[3]]
+            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color == "w"):
                 for j in range(len(Game.blacks)):
                     if(Game.blacks[j] == dead_piece):
                         Game.blacks.remove[j]
                         
-            if(board.board[move_set[1]][move_set[0]].get_color == "b"):
+            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color == "b"):
                 for j in range(len(Game.whites)):
                     if(Game.whites[j] == dead_piece):
                         Game.whites.remove[j]
                         
-            board.board[move_set[3]][move_set[2]] = board.board[move_set[1]][move_set[0]]
-            board.board[move_set[1]][move_set[0]] = None
+            Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[1]][move_set[0]]
+            Game.board.get_board()[move_set[0]][move_set[1]] = None
             Game.move_number+=1
+            Game.board.show()
             
         else:
             print("That move is not allowed.")
@@ -62,35 +79,52 @@ class Game(object):
             
   
     def move_input():
+        '''
+        Converts input of a#;b# to list [y-from, x-from, y-to, x-to]
+        Fails if there is no piece in from index
+        '''
     
         move = input("what is your move? ")
     
         while(True):
             try:
-                assert move[0].isalpha() and move[1].isdigit() and move[2] ==":" and move[3].isalpha() and move[4].isdigit()
+                assert move[0].isalpha() and move[1].isdigit() and move[2] ==";" and move[3].isalpha() and move[4].isdigit()
                
                 switcher={
-                    "A" : 0,
-                    "B" : 1,
-                    "C" : 2,
-                    "D" : 3,
-                    "E" : 4,
-                    "F" : 5,
-                    "G" : 6,
-                    "H" : 7
+                    "a" : 0,
+                    "b" : 1,
+                    "c" : 2,
+                    "d" : 3,
+                    "e" : 4,
+                    "f" : 5,
+                    "g" : 6,
+                    "h" : 7
                     }
-            
-                return [8-int(move[1]),switcher.get(move[0]),8-int(move[4]),switcher.get(move[3])]
+                val = [8-int(move[1]),switcher.get(move[0]),8-int(move[4]),switcher.get(move[3])]
+                assert Game.board.get_board()[val[0]][val[1]] != None
+                return val
         
             except(AssertionError):
-                print("There was an error, please try again")
+                print("Please input valid indicies")
                 move = input("What is your move? ")
                 continue
             
-    def is_check():
+    def is_check_b():
         '''
-        If the opposite color king is in your allowed_moves, signal a check
+        If king in an opposite colored piece's allowed_moves, signal a check
+        Color is of current turn's king
         '''
+        for piece in Game.whites:
+            if(Game.bking.get_index() in piece.allowed_moves()):
+                return True
+        return False
+    def is_check_w():
+        for piece in Game.blacks:
+            if(Game.wking.get_index() in piece.allowed_moves()):
+                print(Game.wking.get_index(), piece, piece.allowed_moves())
+                return True
+        return False
+            
     
     def is_checkmate():
         '''
@@ -99,64 +133,71 @@ class Game(object):
         and recalculating every possible move of other pieces would not release the check
         return True
         '''
+        if(Game.is_check_b() == False and Game.is_check_w() == False):
+            return None
         "".split()
         
     def run_console():
-        board = bp.Board()
+        '''
+        Initializes pieces on board
+        Loops turns until checkmate
+        '''
         
         #Create Pawns
-        for i in range(len(board.get_board()[1])):
-            pawn = bp.Pawn("b", board, (1,i))
-            board.add(pawn)
-            blacks.append(pawn)
-            pawn = bp.Pawn("w", board, (6,i))
-            board.add(pawn)
-            whites.append(pawn)
+        for i in range(len(Game.board.get_board()[1])):
+            piece = bp.Pawn("b", Game.board, (1,i))
+            Game.board.add(piece)
+            Game.blacks.append(piece)
+            piece = bp.Pawn("w", Game.board, (6,i))
+            Game.board.add(piece)
+            Game.whites.append(piece)
             
         #Rooks
         for i in range(0,8,7):
-            rook = bp.Rook("b", board, (0,i))
-            board.add(rook)
-            blacks.append(rook)
-            rook = bp.Rook("w", board, (7,i))
-            board.add(rook)
-            whites.append(rook)
+            piece = bp.Rook("b", Game.board, (0,i))
+            Game.board.add(piece)
+            Game.blacks.append(piece)
+            piece = bp.Rook("w", Game.board, (7,i))
+            Game.board.add(piece)
+            Game.whites.append(piece)
             
         #Knights
         for i in range(1,7,5):
-            knight = bp.Knight("b", board, (0,i))
-            board.add(knight)
-            blacks.append(knight)
-            knight = bp.Knight("w", board, (7,i))
-            board.add(knight)
-            whites.append(knight)
+            piece = bp.Knight("b", Game.board, (0,i))
+            Game.board.add(piece)
+            Game.blacks.append(piece)
+            piece = bp.Knight("w", Game.board, (7,i))
+            Game.board.add(piece)
+            Game.whites.append(piece)
             
         #Bishop
         for i in range(2,7, 3):
-            bishop = bp.Bishop("b", board, (0,i))
-            board.add(bishop)
-            blacks.append(bishop)
-            bishop = bp.Bishop("w", board, (7,i))
-            board.add(bishop)
-            whites.append(bishop)
+            piece = bp.Bishop("b", Game.board, (0,i))
+            Game.board.add(piece)
+            Game.blacks.append(piece)
+            piece = bp.Bishop("w", Game.board, (7,i))
+            Game.board.add(piece)
+            Game.whites.append(piece)
             
         #Queens
-        queen = bp.Queen("b", board, (0,3))
-        board.add(queen)
-        blacks.append(queen)
-        queen = bp.Queen("w", board, (7,3))
-        board.add(queen)
-        whites.append(queen)
+        if(True): #For collapsing purposes
+            piece = bp.Queen("b", Game.board, (0,3))
+            Game.board.add(piece)
+            Game.blacks.append(piece)
+            piece = bp.Queen("w", Game.board, (7,3))
+            Game.board.add(piece)
+            Game.whites.append(piece)
         
         #Kings
-        king = bp.King("b", board, (0,4))
-        board.add(king)
-        blacks.append(king)
-        king = bp.King("w", board, (7,4))
-        board.add(king)
-        whites.append(king)
+        if(True):
+            Game.bking = bp.King("b", Game.board, (0,4))
+            Game.board.add(Game.bking)
+            Game.blacks.append(Game.bking)
+            Game.wking = bp.King("w", Game.board, (7,4))
+            Game.board.add(Game.wking)
+            Game.whites.append(Game.wking)
 
-        board.show()
+        Game.board.show()
         '''Should we just have the pieces be represented by the first initial
         instead of the whole word?'''
         
@@ -180,34 +221,38 @@ class Game(object):
             "is_checkmate will return None if no checkmate, otherwise it will return the color of the king that is checkmated."
             if(Game.move_number%2 == 0):
                 print("It is white's turn")
+                if(Game.is_check_w() == True):
+                    print("White king is checked")
+                    '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE, DUPLICATE BOARD TEST MAYBE'''
                 move_set = Game.move_input()
-                if(board.board[move_set[1]][move_set[0]].get_color == "w"):
-                    if(board.board[move_set[3]][move_set[2]] == None):
-                        Game.move(board, move_set)
-                    if(board.board[move_set[3]][move_set[2]].get_color == "b"):
-                        Game.attack(board, move_set)
+                if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
+                    if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
+                        Game.move(Game.board, move_set)
+                    elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b"):
+                        Game.attack(Game.board, move_set)
                     else:
                         print("You cannot attack your own piece.")
                 else:
                     print("You must pick a white piece.")
-                    
                
                 
             if(Game.move_number % 2 != 0):
                 print("It is black's turn")
+                if(Game.is_check_b() == True):
+                    print("Black king is checked")
+                    '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE'''
                 move_set = Game.move_input()
-                if(board.board[move_set[1]][move_set[0]].get_color == "w"):
-                    if(board.board[move_set[3]][move_set[2]] == None):
-                        Game.move(move_set)
-                    if(board.board[move_set[3]][move_set[2]].get_color == "b"):
-                        Game.attack(move_set)
+                if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
+                    if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
+                        Game.move(Game.board, move_set)
+                    elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b"):
+                        Game.attack(Game.board, move_set)
                     else:
                         print("You cannot attack your own piece.")
                         continue
                 else:
                     print("You must pick a black piece.")
                     continue
-                
             
             
         
