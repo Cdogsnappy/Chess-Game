@@ -7,6 +7,8 @@ Created on Sat Jul 10 12:20:15 2021
 
 import BoardPieces
 
+
+
 def move_input():
     
     move = input("what is your move?")
@@ -39,5 +41,6 @@ def move_input():
             continue
         
         
-print(str(input_checker("A7:F3")))
+def move():
+    
                     
