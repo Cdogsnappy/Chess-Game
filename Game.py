@@ -21,27 +21,21 @@ class Game(object):
         Checks if move is in allowed moves
         Then moves piece on board
         '''
-        count = 0
-        if(Game.move_number%2 == 0 and Game.board.get_board()[move_set[0]][move_set[1]].get_color() != "w"):
-            print("That move is out of turn.")
-            return None
-        if(Game.move_number%2 == 1 and Game.board.get_board()[move_set[0]][move_set[1]].get_color() != "b"):
-            print("That move is out of turn.")
-            return None
              
         allowed_moves = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
         move_to = (move_set[2],move_set[3])
+        print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
         if(move_to in allowed_moves):
-            count+=1
-                
-        if(count == 1):
+            if(Game.board.get_board()[move_set[0]][move_set[1]].get_name() == "Pawn"):
+                Game.board.get_board()[move_set[0]][move_set[1]].set_first_move()
             Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[0]][move_set[1]]
-            Game.board.get_board()[move_set[2]][move_set[3]].set_index((move_set[1], move_set[0]))
+            Game.board.get_board()[move_set[2]][move_set[3]].set_index((move_set[2], move_set[3]))
             Game.board.get_board()[move_set[0]][move_set[1]] = None
             Game.move_number+=1
             Game.board.show()
             
         else:
+            print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
             print("That move is not allowed.")
             
             
@@ -50,30 +44,39 @@ class Game(object):
     def attack(board, move_set):
         
         count = 0
-        move_list = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
+        allowed_moves = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
         move_to = (move_set[2],move_set[3])
-        for j in range(len(move_list)):
-            if(move_list[j] == move_to):
-                count+=1
+        if(move_to in allowed_moves):
+            count+=1
                 
-        if(count == 0):
+        if(count == 1):
             dead_piece = Game.board.get_board()[move_set[2]][move_set[3]]
-            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color == "w"):
-                for j in range(len(Game.blacks)):
-                    if(Game.blacks[j] == dead_piece):
-                        Game.blacks.remove[j]
+            print(dead_piece)
+            for piece in Game.blacks:
+                print(piece, "b")
+            for piece in Game.whites:
+                print(piece, "w")
+            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
+                Game.blacks.remove(dead_piece)
+                for piece in Game.blacks:
+                    print(piece, "b")
+                
+                # for j in range(len(Game.blacks)):
+                #     if(Game.blacks[j] == dead_piece):    please explain this code to me
+                #         Game.blacks.remove[j]       
                         
-            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color == "b"):
-                for j in range(len(Game.whites)):
-                    if(Game.whites[j] == dead_piece):
-                        Game.whites.remove[j]
+            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "b"):
+                Game.whites.remove(dead_piece)
+                for piece in Game.whites:
+                    print(piece, "w")
                         
-            Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[1]][move_set[0]]
+            Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[0]][move_set[1]]
             Game.board.get_board()[move_set[0]][move_set[1]] = None
             Game.move_number+=1
             Game.board.show()
             
         else:
+            print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
             print("That move is not allowed.")
             
             
@@ -242,10 +245,10 @@ class Game(object):
                     print("Black king is checked")
                     '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE'''
                 move_set = Game.move_input()
-                if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
+                if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "b"):
                     if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
                         Game.move(Game.board, move_set)
-                    elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b"):
+                    elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "w"):
                         Game.attack(Game.board, move_set)
                     else:
                         print("You cannot attack your own piece.")
