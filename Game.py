@@ -84,32 +84,38 @@ class Game(object):
     def move_input():
         '''
         Converts input of a#;b# to list [y-from, x-from, y-to, x-to]
+        Input of a# returns available moves of that piece
         Fails if there is no piece in from index
         '''
     
-        move = input("what is your move? ")
-    
         while(True):
+            move = input("what is your move? ")
+            
             try:
+                switcher={
+                        "a" : 0,
+                        "b" : 1,
+                        "c" : 2,
+                        "d" : 3,
+                        "e" : 4,
+                        "f" : 5,
+                        "g" : 6,
+                        "h" : 7
+                        }
+                
+                if(move[0].isalpha() and move[1].isdigit()):
+                    val = [8-int(move[1]),switcher.get(move[0])]
+                    print("Allowed moves of " + str(Game.board.get_board()[val[0]][val[1]]) + str(Game.board.get_board()[val[0]][val[1]].allowed_moves()))
+                    continue
+                
                 assert move[0].isalpha() and move[1].isdigit() and move[2] ==";" and move[3].isalpha() and move[4].isdigit()
                
-                switcher={
-                    "a" : 0,
-                    "b" : 1,
-                    "c" : 2,
-                    "d" : 3,
-                    "e" : 4,
-                    "f" : 5,
-                    "g" : 6,
-                    "h" : 7
-                    }
                 val = [8-int(move[1]),switcher.get(move[0]),8-int(move[4]),switcher.get(move[3])]
                 assert Game.board.get_board()[val[0]][val[1]] != None
                 return val
         
             except(AssertionError):
                 print("Please input valid indicies")
-                move = input("What is your move? ")
                 continue
             
     def is_check_b():
