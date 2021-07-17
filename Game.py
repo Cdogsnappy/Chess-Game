@@ -50,9 +50,10 @@ class Game(object):
             
             #Check for promotion
             if(Game.board.get_board()[move_set[2]][move_set[3]].get_name() == "Pawn"):
-                if(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b" and move_set[0] == 7):
+                if(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b" and move_set[2] == 7):
                     while(True):
                         try: 
+                            Game.board.show()
                             prom = input("Pawn has reach the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
                             assert prom == "q" or prom == "b" or prom == "r" or prom == "k"
                             break
@@ -66,9 +67,10 @@ class Game(object):
                         "k" : bp.Knight(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
                         }
                     Game.board.get_board()[move_set[2]][move_set[3]] = switcher.get(prom)
-                if(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "w" and move_set[0] == 0):
+                if(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "w" and move_set[2] == 0):
                     while(True):
                         try: 
+                            Game.board.show()
                             prom = input("Pawn has reach the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
                             assert prom == "q" or prom == "b" or prom == "r" or prom == "k"
                             break
@@ -115,10 +117,24 @@ class Game(object):
                         "g" : 6,
                         "h" : 7
                         }
+                switcher2={
+                        0 : "a",
+                        1 : "b",
+                        2 : "c",
+                        3 : "d",
+                        4 : "e",
+                        5 : "f",
+                        6 : "g",
+                        7 : "h"
+                        }
                 
                 if(len(move) == 2 and (move[0].isalpha() and move[1].isdigit())):
                     val = [8-int(move[1]),switcher.get(move[0])]
-                    print("Allowed moves of " + str(Game.board.get_board()[val[0]][val[1]]) + str(Game.board.get_board()[val[0]][val[1]].allowed_moves()))
+                    assert Game.board.get_board()[val[0]][val[1]] != None
+                    print("Allowed moves of " + str(Game.board.get_board()[val[0]][val[1]]) + ": ", end="")
+                    for move in Game.board.get_board()[val[0]][val[1]].allowed_moves():
+                        print(switcher2.get(move[1]) + str(-move[0]+8), end=" ")
+                    print()
                     continue
                 
                 assert move[0].isalpha() and move[1].isdigit() and move[2] ==";" and move[3].isalpha() and move[4].isdigit()
@@ -176,8 +192,7 @@ class Game(object):
                         if(move == check_move):
                             if(Game.board[move[0],move[1]].getColor=="w"):
                                 continue
-                            Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]])
-                            
+                            Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]])                 
                             
                             
                             
