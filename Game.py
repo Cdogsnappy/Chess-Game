@@ -103,7 +103,7 @@ class Game(object):
                         "h" : 7
                         }
                 
-                if(move[0].isalpha() and move[1].isdigit()):
+                if(len(move) == 2 and (move[0].isalpha() and move[1].isdigit())):
                     val = [8-int(move[1]),switcher.get(move[0])]
                     print("Allowed moves of " + str(Game.board.get_board()[val[0]][val[1]]) + str(Game.board.get_board()[val[0]][val[1]].allowed_moves()))
                     continue
