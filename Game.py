@@ -82,12 +82,17 @@ class Game(object):
                         "k" : bp.Knight(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
                         }
                     Game.board.get_board()[move_set[2]][move_set[3]] = switcher.get(prom)
+                    
+            #increase move num and show board
             Game.move_number+=1
             Game.board.show()
             
         else:
             print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
             print("That move is not allowed.")
+            
+    def sim_move(board, move_set):
+        temporary_piece = None
   
     def move_input():
         '''
@@ -131,16 +136,25 @@ class Game(object):
         If king in an opposite colored piece's allowed_moves, signal a check
         Color is of current turn's king
         '''
+        checkers = []
         for piece in Game.whites:
             if(Game.bking.get_index() in piece.allowed_moves()):
-                return True
-        return False
+                checkers.append[piece]
+        
+        if(checkers!=[]):
+            return checkers
+        
+        return None
+        
     def is_check_w():
+        checkers = []
         for piece in Game.blacks:
             if(Game.wking.get_index() in piece.allowed_moves()):
-                print(Game.wking.get_index(), piece, piece.allowed_moves())
-                return True
-        return False
+                checkers.append[piece]
+            if(checkers!= []):
+                return checkers
+            
+        return None
             
     
     def is_checkmate():
@@ -150,6 +164,25 @@ class Game(object):
         and recalculating every possible move of other pieces would not release the check
         return True
         '''
+        checkers = []
+        checker_moves = []
+        if(Game.move_number%2 == 0):
+            checkers = Game.is_check_w() 
+            for piece in checkers:
+                checker_moves.append(piece.allowed_moves())
+            for piece in Game.whites:
+                for move in piece.allowed_moves():
+                    for check_move in checker_moves:
+                        if(move == check_move):
+                            if(Game.board[move[0],move[1]].getColor=="w"):
+                                continue
+                            Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]])
+                            
+                            
+                            
+                            
+                            
+            
         if(Game.is_check_b() == False and Game.is_check_w() == False):
             return None
         "".split()
