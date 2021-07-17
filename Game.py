@@ -11,6 +11,7 @@ class Game(object):
     move_number = 0
     whites = []
     blacks = []
+    save_moves = []
     board = bp.Board()
     wking = bp.Piece("w", board, (-1,-1))
     bking = bp.Piece("b", board, (-1,-1))
@@ -29,6 +30,13 @@ class Game(object):
         print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
         
         if(move_to in allowed_moves):
+            if(Game.save_moves != []):
+                if(move_to in Game.save_moves):
+                    "".split()
+                else:
+                    print("That move will not save you.")
+                    return None
+                    
             if(Game.board.get_board()[move_set[0]][move_set[1]].get_name() == "Pawn"):
                 #Trigger pawn's set_first_move function after the first move
                 Game.board.get_board()[move_set[0]][move_set[1]].set_first_move()
@@ -91,8 +99,48 @@ class Game(object):
             print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
             print("That move is not allowed.")
             
-    def sim_move(board, move_set):
+    def sim_move(board, move_set, color):
         temporary_piece = None
+        
+        allowed_moves = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
+        move_to = (move_set[2],move_set[3])
+        print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
+        
+        if(move_to in allowed_moves):
+            if(Game.board.get_board()[move_set[0]][move_set[1]].get_name() == "Pawn"):
+                #Trigger pawn's set_first_move function after the first move
+                Game.board.get_board()[move_set[0]][move_set[1]].set_first_move()
+                
+                
+            #Actual move
+            temporary_piece = Game.board.get_board()[move_set[2]][move_set[3]]
+            Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[0]][move_set[1]]
+            Game.board.get_board()[move_set[2]][move_set[3]].set_index((move_set[2], move_set[3]))
+            Game.board.get_board()[move_set[0]][move_set[1]] = None
+            
+            if(color == "w"):
+                if(Game.is_check_w() == None):
+                    Game.board.get_board()[move_set[0]][move_set[1]] = Game.board.get_board()[move_set[2]][move_set[3]]
+                    Game.board.get_board()[move_set[0]][move_set[1]].set_index((move_set[0], move_set[1]))
+                    Game.board.get_board()[move_set[2]][move_set[3]] = temporary_piece
+                    return True
+                
+            if(color == "b"):
+                if(Game.is_check_b() == None):
+                    Game.board.get_board()[move_set[0]][move_set[1]] = Game.board.get_board()[move_set[2]][move_set[3]]
+                    Game.board.get_board()[move_set[0]][move_set[1]].set_index((move_set[0], move_set[1]))
+                    Game.board.get_board()[move_set[2]][move_set[3]] = temporary_piece
+                    return True
+                
+            Game.board.get_board()[move_set[0]][move_set[1]] = Game.board.get_board()[move_set[2]][move_set[3]]
+            Game.board.get_board()[move_set[0]][move_set[1]].set_index((move_set[0], move_set[1]))
+            Game.board.get_board()[move_set[2]][move_set[3]] = temporary_piece
+            return False
+            
+            
+            
+                    
+            
   
     def move_input():
         '''
@@ -139,18 +187,18 @@ class Game(object):
         checkers = []
         for piece in Game.whites:
             if(Game.bking.get_index() in piece.allowed_moves()):
-                checkers.append[piece]
+                checkers.append(piece)
         
         if(checkers!=[]):
             return checkers
         
         return None
-        
+    
     def is_check_w():
         checkers = []
         for piece in Game.blacks:
             if(Game.wking.get_index() in piece.allowed_moves()):
-                checkers.append[piece]
+                checkers.append(piece)
             if(checkers!= []):
                 return checkers
             
@@ -164,8 +212,12 @@ class Game(object):
         and recalculating every possible move of other pieces would not release the check
         return True
         '''
+        if(Game.is_check_b() == None and Game.is_check_w() == None):
+            return None
+        
         checkers = []
         checker_moves = []
+        save_moves = []
         if(Game.move_number%2 == 0):
             checkers = Game.is_check_w() 
             for piece in checkers:
@@ -176,15 +228,35 @@ class Game(object):
                         if(move == check_move):
                             if(Game.board[move[0],move[1]].getColor=="w"):
                                 continue
-                            Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]])
+                            if(Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]],"w") == True):
+                                save_moves.append(move)
+                            
+            if(save_moves == []):
+                return "b"
+            return save_moves
+        
+        
+        if(Game.move_number%2 != 0):
+            checkers = Game.is_check_b() 
+            for piece in checkers:
+                checker_moves.append(piece.allowed_moves())
+            for piece in Game.blacks:
+                for move in piece.allowed_moves():
+                    for check_move in checker_moves:
+                        if(move == check_move):
+                            if(Game.board[move[0],move[1]].getColor=="b"):
+                                continue
+                            if(Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]],"b") == True):
+                                save_moves.append(move)
+                            
+            if(save_moves == []):
+                return "w"
+            return save_moves
                             
                             
                             
                             
-                            
-            
-        if(Game.is_check_b() == False and Game.is_check_w() == False):
-            return None
+                        
         "".split()
         
     def run_console():
@@ -267,11 +339,11 @@ class Game(object):
         '''
         
         
-        while(Game.is_checkmate() == None):
-            "is_checkmate will return None if no checkmate, otherwise it will return the color of the king that is checkmated."
+        while(Game.is_checkmate() != "w" and Game.is_checkmate != "b"):
             if(Game.move_number%2 == 0):
                 print("It is white's turn")
-                if(Game.is_check_w() == True):
+                if(Game.is_check_w() != None):
+                    save_moves = Game.is_checkmate()
                     print("White king is checked")
                     '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE, DUPLICATE BOARD TEST MAYBE'''
                 move_set = Game.move_input()
@@ -288,7 +360,8 @@ class Game(object):
                 
             if(Game.move_number % 2 != 0):
                 print("It is black's turn")
-                if(Game.is_check_b() == True):
+                if(Game.is_check_b() != None):
+                    save_moves = Game.is_checkmate()
                     print("Black king is checked")
                     '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE'''
                 move_set = Game.move_input()
@@ -303,6 +376,12 @@ class Game(object):
                 else:
                     print("You must pick a black piece.")
                     continue
+                
+        if(Game.is_checkmate() == "w"):
+            print ("Black has no more possible moves, white has won the game.")
+            
+        else:
+            print ("White has no more possible moves, black has won the game.")
             
             
         
