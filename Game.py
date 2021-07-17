@@ -20,66 +20,74 @@ class Game(object):
         Checks if the piece is allowed to move on that turn
         Checks if move is in allowed moves
         Then moves piece on board
+        If attacking, removes piece from overall list of white or black pieces and from board
+        Checks pawn's first move and promotion
         '''
              
         allowed_moves = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
         move_to = (move_set[2],move_set[3])
         print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
+        
         if(move_to in allowed_moves):
             if(Game.board.get_board()[move_set[0]][move_set[1]].get_name() == "Pawn"):
+                #Trigger pawn's set_first_move function after the first move
                 Game.board.get_board()[move_set[0]][move_set[1]].set_first_move()
+                
+            #Try to remove a piece, don't error out if there isn't actually a piece at move site        
+            try: 
+                dead_piece = Game.board.get_board()[move_set[2]][move_set[3]]
+                if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
+                    Game.blacks.remove(dead_piece)
+                if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "b"):
+                    Game.whites.remove(dead_piece)
+            except(ValueError):
+                "".split() #Do nothing
+                
+            #Actual move
             Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[0]][move_set[1]]
             Game.board.get_board()[move_set[2]][move_set[3]].set_index((move_set[2], move_set[3]))
             Game.board.get_board()[move_set[0]][move_set[1]] = None
+            
+            #Check for promotion
+            if(Game.board.get_board()[move_set[2]][move_set[3]].get_name() == "Pawn"):
+                if(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b" and move_set[0] == 7):
+                    while(True):
+                        try: 
+                            prom = input("Pawn has reach the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
+                            assert prom == "q" or prom == "b" or prom == "r" or prom == "k"
+                            break
+                        except(AssertionError):
+                            print("Input q, r, b, or k")
+                            continue
+                    switcher={
+                        "q" : bp.Queen(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        "b" : bp.Bishop(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        "r" : bp.Rook(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        "k" : bp.Knight(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        }
+                    Game.board.get_board()[move_set[2]][move_set[3]] = switcher.get(prom)
+                if(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "w" and move_set[0] == 0):
+                    while(True):
+                        try: 
+                            prom = input("Pawn has reach the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
+                            assert prom == "q" or prom == "b" or prom == "r" or prom == "k"
+                            break
+                        except(AssertionError):
+                            print("Input q, r, b, or k")
+                            continue
+                    switcher={
+                        "q" : bp.Queen(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        "b" : bp.Bishop(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        "r" : bp.Rook(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        "k" : bp.Knight(Game.board.get_board()[move_set[2]][move_set[3]].get_color(), Game.board, (move_set[2], move_set[3])),
+                        }
+                    Game.board.get_board()[move_set[2]][move_set[3]] = switcher.get(prom)
             Game.move_number+=1
             Game.board.show()
             
         else:
             print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
             print("That move is not allowed.")
-            
-            
-            
-            
-    def attack(board, move_set):
-        
-        count = 0
-        allowed_moves = Game.board.get_board()[move_set[0]][move_set[1]].allowed_moves()
-        move_to = (move_set[2],move_set[3])
-        if(move_to in allowed_moves):
-            count+=1
-                
-        if(count == 1):
-            dead_piece = Game.board.get_board()[move_set[2]][move_set[3]]
-            print(dead_piece)
-            for piece in Game.blacks:
-                print(piece, "b")
-            for piece in Game.whites:
-                print(piece, "w")
-            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
-                Game.blacks.remove(dead_piece)
-                for piece in Game.blacks:
-                    print(piece, "b")
-                
-                # for j in range(len(Game.blacks)):
-                #     if(Game.blacks[j] == dead_piece):    please explain this code to me
-                #         Game.blacks.remove[j]       
-                        
-            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "b"):
-                Game.whites.remove(dead_piece)
-                for piece in Game.whites:
-                    print(piece, "w")
-                        
-            Game.board.get_board()[move_set[2]][move_set[3]] = Game.board.get_board()[move_set[0]][move_set[1]]
-            Game.board.get_board()[move_set[0]][move_set[1]] = None
-            Game.move_number+=1
-            Game.board.show()
-            
-        else:
-            print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
-            print("That move is not allowed.")
-            
-            
   
     def move_input():
         '''
@@ -238,7 +246,7 @@ class Game(object):
                     if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
                         Game.move(Game.board, move_set)
                     elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "b"):
-                        Game.attack(Game.board, move_set)
+                        Game.move(Game.board, move_set)
                     else:
                         print("You cannot attack your own piece.")
                 else:
@@ -255,7 +263,7 @@ class Game(object):
                     if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
                         Game.move(Game.board, move_set)
                     elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "w"):
-                        Game.attack(Game.board, move_set)
+                        Game.move(Game.board, move_set)
                     else:
                         print("You cannot attack your own piece.")
                         continue
