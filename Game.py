@@ -30,7 +30,9 @@ class Game(object):
         print("Debugging piece and allowed moves:", Game.board.get_board()[move_set[0]][move_set[1]], allowed_moves)
         
         if(move_to in allowed_moves):
+            print("check 1")
             if(Game.save_moves != []):
+                print("check 2")
                 if(move_to in Game.save_moves):
                     "".split()
                 else:
@@ -236,13 +238,14 @@ class Game(object):
         save_moves = []
         if(Game.move_number%2 == 0):
             checkers = Game.is_check_w() 
+            print(checkers)
             for piece in checkers:
                 checker_moves.append(piece.allowed_moves())
             for piece in Game.whites:
                 for move in piece.allowed_moves():
                     for check_move in checker_moves:
                         if(move == check_move):
-                            if(Game.board[move[0],move[1]].getColor=="w"):
+                            if(Game.board[move[0],move[1]].get_color()=="w"):
                                 continue
                             if(Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]],"w") == True):
                                 save_moves.append(move)
@@ -254,13 +257,14 @@ class Game(object):
         
         if(Game.move_number%2 != 0):
             checkers = Game.is_check_b() 
+            print(checkers)
             for piece in checkers:
                 checker_moves.append(piece.allowed_moves())
             for piece in Game.blacks:
                 for move in piece.allowed_moves():
                     for check_move in checker_moves:
                         if(move == check_move):
-                            if(Game.board[move[0],move[1]].getColor=="b"):
+                            if(Game.board[move[0],move[1]].get_color()=="b"):
                                 continue
                             if(Game.sim_move(Game.board,[piece.index[0],piece.index[1],move[0],move[1]],"b") == True):
                                 save_moves.append(move)
@@ -302,9 +306,9 @@ class Game(object):
             
         #Knights
         for i in range(1,7,5):
-            piece = bp.Knight("b", Game.board, (0,i))
+            piece = bp.Knight("w", Game.board, (0,i))
             Game.board.add(piece)
-            Game.blacks.append(piece)
+            Game.whites.append(piece)
             piece = bp.Knight("w", Game.board, (7,i))
             Game.board.add(piece)
             Game.whites.append(piece)
@@ -360,7 +364,7 @@ class Game(object):
             if(Game.move_number%2 == 0):
                 print("It is white's turn")
                 if(Game.is_check_w() != None):
-                    save_moves = Game.is_checkmate()
+                    Game.save_moves = Game.is_checkmate()
                     print("White king is checked")
                     '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE, DUPLICATE BOARD TEST MAYBE'''
                 move_set = Game.move_input()
@@ -378,7 +382,7 @@ class Game(object):
             if(Game.move_number % 2 != 0):
                 print("It is black's turn")
                 if(Game.is_check_b() != None):
-                    save_moves = Game.is_checkmate()
+                    Game.save_moves = Game.is_checkmate()
                     print("Black king is checked")
                     '''SOMEHOW NEED TO FORCE AN UNCHECKING MOVE'''
                 move_set = Game.move_input()
