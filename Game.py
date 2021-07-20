@@ -118,25 +118,16 @@ class Game(object):
         
         #Check if still in check
         if(color == "b"):
-<<<<<<< HEAD
             result = Game.is_check_b()
         if(color == "w"):
             result = Game.is_check_w()
-=======
-            return is_check_b()
-        if(color == "w"):
-            return is_check_w()
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
         
         #Return pieces
         Game.board.get_board()[move_set[0]][move_set[1]] = Game.board.get_board()[move_set[2]][move_set[3]]
         Game.board.get_board()[move_set[0]][move_set[1]].set_index((move_set[0], move_set[1]))
         Game.board.get_board()[move_set[2]][move_set[3]] = dead_piece
-<<<<<<< HEAD
         
         return result
-=======
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
             
     def move_input():
         '''
@@ -218,7 +209,6 @@ class Game(object):
             # try every black move, checking every white allowed moves every time
             # if king's index always in an allowed moves, return True
             for piece in Game.blacks:
-<<<<<<< HEAD
                 loc = piece.get_index()
                 all_moves = piece.allowed_moves()
                 for move in all_moves:
@@ -236,12 +226,6 @@ class Game(object):
                         print((loc[0], loc[1], move[0], move[1]))
                         return False
         return True
-=======
-                all_moves = piece.allowed_moves()
-                for move in all_moves:
-                    if(sim_move(Game.board, move, "b") == False):
-                        return False
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
         
     def run_console():
         '''
@@ -305,30 +289,14 @@ class Game(object):
 
         Game.board.show()     
         print("Input moves as a#;b#")
-        
-<<<<<<< HEAD
+
         #Main game loop
         while(Game.is_checkmate() == False):
-=======
-        '''
-        Game loop:
-        Tell user whose turn it is
-        Take input
-        if not checkmate, continue
-        '''
-        
-        
-        while(is_checkmate() == False):
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
             while(Game.move_number%2 == 0):
                 print("It is white's turn")
                 if(Game.is_check_w() == True):
                     print("White king is checked")
-<<<<<<< HEAD
                 move_set = Game.move_input()
-=======
-                move_set = move_input()
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
                 if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "w"):
                     if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
                         Game.move(Game.board, move_set)
@@ -339,7 +307,6 @@ class Game(object):
                 else:
                     print("You must pick a white piece.")
                
-<<<<<<< HEAD
             if(Game.is_checkmate() == True):
                 break #Otherwise it only ends while loop for a white checkmate
             while(Game.move_number % 2 != 0):
@@ -355,31 +322,8 @@ class Game(object):
                     else:
                         print("You cannot attack your own piece.")
                         continue
-=======
                 
-        while(Game.move_number % 2 != 0):
-            print("It is black's turn")
-            if(Game.is_check_b() == True):
-                print("Black king is checked")
-            move_set = move_input()
-            if(Game.board.get_board()[move_set[0]][move_set[1]].get_color() == "b"):
-                if(Game.board.get_board()[move_set[2]][move_set[3]] == None):
-                    Game.move(Game.board, move_set)
-                elif(Game.board.get_board()[move_set[2]][move_set[3]].get_color() == "w"):
-                    Game.move(Game.board, move_set)
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
-                else:
-                    print("You cannot attack your own piece.")
-                    continue
-            else:
-                print("You must pick a black piece.")
-                continue
-                
-<<<<<<< HEAD
         if(Game.move_number%2 == 1):
-=======
-        if(Game.move_number%2 == 0):
->>>>>>> 29a30f2c983d8d021ad43b24b2aa8ee343e55b11
             print ("Black has no more possible moves, white has won the game.")
         else:
             print ("White has no more possible moves, black has won the game.")
