@@ -33,11 +33,10 @@ class Game(object):
             print("check 1")
             if(Game.save_moves != []):
                 print("check 2")
-                if(move_to in Game.save_moves):
-                    "".split()
-                else:
-                    print("That move will not save you.")
-                    return None
+                for move in Game.save_moves:
+                    if(move != move_to):
+                        print("That move will not save you.")
+                        return None
                     
             if(Game.board.get_board()[move_set[0]][move_set[1]].get_name() == "Pawn"):
                 #Trigger pawn's set_first_move function after the first move
@@ -64,7 +63,7 @@ class Game(object):
                     while(True):
                         try: 
                             Game.board.show()
-                            prom = input("Pawn has reach the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
+                            prom = input("Pawn has reached the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
                             assert prom == "q" or prom == "b" or prom == "r" or prom == "k"
                             break
                         except(AssertionError):
@@ -81,7 +80,7 @@ class Game(object):
                     while(True):
                         try: 
                             Game.board.show()
-                            prom = input("Pawn has reach the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
+                            prom = input("Pawn has reached the end of the board, what do you want to promote it to, Queen, Bishop, Rook, or Knight(q/b/r/k)?")
                             assert prom == "q" or prom == "b" or prom == "r" or prom == "k"
                             break
                         except(AssertionError):
@@ -360,8 +359,8 @@ class Game(object):
         '''
         
         
-        while(Game.is_checkmate() != "w" and Game.is_checkmate != "b"):
-            if(Game.move_number%2 == 0):
+        while(Game.is_checkmate() != "w" and Game.is_checkmate() != "b"):
+            while(Game.move_number%2 == 0):
                 print("It is white's turn")
                 if(Game.is_check_w() != None):
                     Game.save_moves = Game.is_checkmate()
@@ -379,7 +378,7 @@ class Game(object):
                     print("You must pick a white piece.")
                
                 
-            if(Game.move_number % 2 != 0):
+            while(Game.move_number % 2 != 0):
                 print("It is black's turn")
                 if(Game.is_check_b() != None):
                     Game.save_moves = Game.is_checkmate()
