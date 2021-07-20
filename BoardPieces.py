@@ -94,12 +94,12 @@ class Piece(object):
 
         
 class Pawn(Piece):
-    is_first_move = True
     piece_value = 1
     name = "Pawn"
     
     def __init__(self, color, board, index):
         Piece.__init__(self, color, board, index)
+        self.is_first_move = True
         
     def allowed_moves(self):
         y = self.index[0]
@@ -108,28 +108,31 @@ class Pawn(Piece):
 
         if(self.is_first_move):
              if(self.color == "w"):
-                 temp_list.append((y+2,x))
-             if(self.color == "b"):
                  temp_list.append((y-2,x))
-             self.is_first_move = False
+             if(self.color == "b"):
+                 temp_list.append((y+2,x))
         if(self.color == "w"):
             if(y != 0):
-                temp_list.append((y+1,x))
-                if(x != 0):
-                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "b"):
-                        temp_list.append((y+1,x-1))
-                if(x != 7):
-                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "b"):
-                        temp_list.append((y+1,x+1))         
-        if(self.color == "b"):
-            if(y != 7):
                 temp_list.append((y-1,x))
                 if(x != 0):
-                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "w"):
+                    if(self.board.get_board()[y-1][x-1] != None and self.board.get_board()[y-1][x-1].get_color() == "b"):
                         temp_list.append((y-1,x-1))
                 if(x != 7):
-                    if(self.board[y-1][x-1] != None and self.board[y-1][x-1].get_color() == "w"):
-                        temp_list.append((y-1,x+1))     
+                    if(self.board.get_board()[y-1][x+1] != None and self.board.get_board()[y-1][x+1].get_color() == "b"):
+                        temp_list.append((y-1,x+1))         
+        if(self.color == "b"):
+            if(y != 7):
+                temp_list.append((y+1,x))
+                if(x != 0):
+                    if(self.board.get_board()[y+1][x-1] != None and self.board.get_board()[y+1][x-1].get_color() == "w"):
+                        temp_list.append((y+1,x-1))
+                if(x != 7):
+                    if(self.board.get_board()[y+1][x+1] != None and self.board.get_board()[y+1][x+1].get_color() == "w"):
+                        temp_list.append((y+1,x+1))  
+        return temp_list
+    
+    def set_first_move(self):
+        self.is_first_move = False
 
 
 class Rook(Piece):
@@ -147,16 +150,18 @@ class Rook(Piece):
         
         while x-j>0:
             j+=1
-            if(self.board[y][x-j] != None):
-                temp_list.append((y,x-j))
+            if(self.board.get_board()[y][x-j] != None):
+                if(self.board.get_board()[y][x-j].get_color() != self.color):
+                    temp_list.append((y,x-j))
                 break
             temp_list.append((y,x-j))
         j=0
         
         while x+j<7:
             j+=1
-            if(self.board[y][x+j] != None):
-                temp_list.append((y,x+j))
+            if(self.board.get_board()[y][x+j] != None):
+                if(self.board.get_board()[y][x+j].get_color() != self.color):
+                    temp_list.append((y,x+j))
                 break
             temp_list.append((y,x+j))
             
@@ -164,8 +169,9 @@ class Rook(Piece):
             
         while y-j>0:
             j+=1
-            if(self.board[y-j][x] != None):
-                temp_list.append((y-j,x))
+            if(self.board.get_board()[y-j][x] != None):
+                if(self.board.get_board()[y-j][x].get_color() != self.color):
+                    temp_list.append((y-j,x))
                 break
             temp_list.append((y-j,x))
             
@@ -173,8 +179,9 @@ class Rook(Piece):
             
         while y+j<7:
             j+=1
-            if(self.board[y+j][x] != None):
-                temp_list.append((y+j,x))
+            if(self.board.get_board()[y+j][x] != None):
+                if(self.board.get_board()[y+j][x].get_color() != self.color):
+                    temp_list.append((y+j,x))
                 break
             temp_list.append((y+j,x))
         
@@ -198,8 +205,9 @@ class Bishop(Piece):
         #Up and right
         while(y-j>0 and x+j<7):
             j+=1
-            if(self.board[y-j][x+j] != None):
-                temp_list.append((y-j,x+j))
+            if(self.board.get_board()[y-j][x+j] != None):
+                if(self.board.get_board()[y-j][x+j].get_color() != self.color):
+                    temp_list.append((y-j,x+j))
                 break
             temp_list.append((y-j,x+j))
             
@@ -207,8 +215,9 @@ class Bishop(Piece):
         #Up and left
         while(y-j>0 and x-j>0):
             j+=1
-            if(self.board[y-j][x-j] != None):
-                temp_list.append((y-j,x-j))
+            if(self.board.get_board()[y-j][x-j] != None):
+                if(self.board.get_board()[y-j][x-j].get_color() != self.color):
+                    temp_list.append((y-j,x-j))
                 break
             temp_list.append((y-j,x-j))
             
@@ -216,8 +225,9 @@ class Bishop(Piece):
         #Down and left
         while(y+j<7 and x-j>0):
             j+=1
-            if(self.board[y+j][x-j] != None):
-                temp_list.append((y+j,x-j))
+            if(self.board.get_board()[y+j][x-j] != None):
+                if(self.board.get_board()[y+j][x-j].get_color() != self.color):
+                    temp_list.append((y+j,x-j))
                 break
             temp_list.append((y+j,x-j))
             
@@ -225,8 +235,9 @@ class Bishop(Piece):
         #Down and right
         while(y+j<7 and x+j<7):
             j+=1
-            if(self.board[y+j][x+j] != None):
-                temp_list.append((y+j,x+j))
+            if(self.board.get_board()[y+j][x+j] != None):
+                if(self.board.get_board()[y+j][x+j].get_color() != self.color):
+                    temp_list.append((y+j,x+j))
                 break
             temp_list.append((y+j,x+j))
       
@@ -247,11 +258,12 @@ class Queen(Piece):
         j = 0
         temp_list = []
         
-         #Up and right
+        #Up and right
         while(y-j>0 and x+j<7):
             j+=1
-            if(self.board[y-j][x+j] != None):
-                temp_list.append((y-j,x+j))
+            if(self.board.get_board()[y-j][x+j] != None):
+                if(self.board.get_board()[y-j][x+j].get_color() != self.color):
+                    temp_list.append((y-j,x+j))
                 break
             temp_list.append((y-j,x+j))
             
@@ -259,8 +271,9 @@ class Queen(Piece):
         #Up and left
         while(y-j>0 and x-j>0):
             j+=1
-            if(self.board[y-j][x-j] != None):
-                temp_list.append((y-j,x-j))
+            if(self.board.get_board()[y-j][x-j] != None):
+                if(self.board.get_board()[y-j][x-j].get_color() != self.color):
+                    temp_list.append((y-j,x-j))
                 break
             temp_list.append((y-j,x-j))
             
@@ -268,8 +281,9 @@ class Queen(Piece):
         #Down and left
         while(y+j<7 and x-j>0):
             j+=1
-            if(self.board[y+j][x-j] != None):
-                temp_list.append((y+j,x-j))
+            if(self.board.get_board()[y+j][x-j] != None):
+                if(self.board.get_board()[y+j][x-j].get_color() != self.color):
+                    temp_list.append((y+j,x-j))
                 break
             temp_list.append((y+j,x-j))
             
@@ -277,25 +291,28 @@ class Queen(Piece):
         #Down and right
         while(y+j<7 and x+j<7):
             j+=1
-            if(self.board[y+j][x+j] != None):
-                temp_list.append((y+j,x+j))
+            if(self.board.get_board()[y+j][x+j] != None):
+                if(self.board.get_board()[y+j][x+j].get_color() != self.color):
+                    temp_list.append((y+j,x+j))
                 break
             temp_list.append((y+j,x+j))
             
-            j = 0
+        j = 0
             
         while x-j>0:
             j+=1
-            if(self.board[y][x-j] != None):
-                temp_list.append((y,x-j))
+            if(self.board.get_board()[y][x-j] != None):
+                if(self.board.get_board()[y][x-j].get_color() != self.color):
+                    temp_list.append((y,x-j))
                 break
             temp_list.append((y,x-j))
         j=0
         
         while x+j<7:
             j+=1
-            if(self.board[y][x+j] != None):
-                temp_list.append((y,x+j))
+            if(self.board.get_board()[y][x+j] != None):
+                if(self.board.get_board()[y][x+j].get_color() != self.color):
+                    temp_list.append((y,x+j))
                 break
             temp_list.append((y,x+j))
             
@@ -303,8 +320,9 @@ class Queen(Piece):
             
         while y-j>0:
             j+=1
-            if(self.board[y-j][x] != None):
-                temp_list.append((y-j,x))
+            if(self.board.get_board()[y-j][x] != None):
+                if(self.board.get_board()[y-j][x].get_color() != self.color):
+                    temp_list.append((y-j,x))
                 break
             temp_list.append((y-j,x))
             
@@ -312,8 +330,9 @@ class Queen(Piece):
             
         while y+j<7:
             j+=1
-            if(self.board[y+j][x] != None):
-                temp_list.append((y+j,x))
+            if(self.board.get_board()[y+j][x] != None):
+                if(self.board.get_board()[y+j][x].get_color() != self.color):
+                    temp_list.append((y+j,x))
                 break
             temp_list.append((y+j,x))
         
@@ -334,28 +353,55 @@ class Knight(Piece):
         temp_list = []
         
         if(x+2<8 and y+1<8):
-            temp_list.append((y+1,x+2))
+            if(self.board.get_board()[y+1][x+2] == None):
+                temp_list.append((y+1,x+2))
+            elif(self.board.get_board()[y+1][x+2].get_color() != self.color):
+                    temp_list.append((y+1,x+2))
+                
             
         if(x+1<8 and y+2<8):
-            temp_list.append((y+2,x+1))
+            if(self.board.get_board()[y+2][x+1] == None):
+                temp_list.append((y+2,x+1))
+            elif(self.board.get_board()[y+2][x+1].get_color() != self.color):
+                temp_list.append((y+2,x+1))
+                
             
         if(x+2<8 and y-1>-1):
-            temp_list.append((y-1,x+2))
+            if(self.board.get_board()[y-1][x+2] == None):
+                temp_list.append((y-1,x+2))
+            elif(self.board.get_board()[y-1][x+2].get_color() != self.color):
+                temp_list.append((y-1,x+2))
+                
             
         if(x-2>-1 and y-1>-1):
-            temp_list.append((y-1,x-2))
+            if(self.board.get_board()[y-1][x-2] == None):
+                temp_list.append((y-1,x-2))
+            elif(self.board.get_board()[y-1][x-2].get_color() != self.color):
+                temp_list.append((y-1,x-2))
             
         if(x-2>-1 and y+1<8):
-            temp_list.append((y+1,x-2))
+            if(self.board.get_board()[y+1][x-2] == None):
+                temp_list.append((y+1,x-2))
+            elif(self.board.get_board()[y+1][x-2].get_color() != self.color):
+                temp_list.append((y+1,x-2))
             
         if(x+1<8 and y-2>-1):
-            temp_list.append((y-2,x+1))
+            if(self.board.get_board()[y-2][x+1] == None):
+                temp_list.append((y-2,x+1))
+            elif(self.board.get_board()[y-2][x+1].get_color() != self.color):
+                temp_list.append((y-2,x+1))
             
         if(x-1>-1 and y+2<8):
-            temp_list.append((y+2,x-1))
+            if(self.board.get_board()[y+2][x-1] == None):
+                temp_list.append((y+2,x-1))
+            elif(self.board.get_board()[y+2][x-1].get_color() != self.color):
+                temp_list.append((y+2,x-1))
             
         if(x-1>-1 and y-2>-1):
-            temp_list.append((y-2,x-1))
+            if(self.board.get_board()[y-2][x-1] == None):
+                temp_list.append((y-2,x-1))
+            elif(self.board.get_board()[y-2][x-1].get_color() != self.color):
+                temp_list.append((y-2,x-1))
             
         return temp_list
     
@@ -373,28 +419,52 @@ class King(Piece):
         temp_list = []
         
         if(x+1<8 and y+1<8):
-            temp_list.append((y+1,x+1))
+            if(self.board.get_board()[y+1][x+1] == None):
+                temp_list.append((y+1,x+1))
+            elif(self.board.get_board()[y+1][x+1].get_color() != self.color):
+                temp_list.append((y+1,x+1))
             
         if(x+1<8):
-            temp_list.append((y,x+1))
+            if(self.board.get_board()[y][x+1] == None):
+                 temp_list.append((y,x+1))
+            elif(self.board.get_board()[y][x+1].get_color() != self.color):
+                temp_list.append((y,x+1))
             
         if(y+1<8):
-            temp_list.append((y+1,x))
+            if(self.board.get_board()[y+1][x] == None):
+                temp_list.append((y+1,x))
+            elif(self.board.get_board()[y+1][x].get_color() != self.color):
+                temp_list.append((y+1,x))
             
         if(x-1>-1 and y-1>-1):
-            temp_list.append((y-1,x-1))
+            if(self.board.get_board()[y-1][x-1] == None):
+                temp_list.append((y-1,x-1))
+            elif(self.board.get_board()[y-1][x-1].get_color() != self.color):
+                temp_list.append((y-1,x-1))
     
         if(x-1>-1):
-            temp_list.append((y,x-1))
+            if(self.board.get_board()[y][x-1] == None):
+                temp_list.append((y,x-1))
+            elif(self.board.get_board()[y][x-1].get_color() != self.color):
+                temp_list.append((y,x-1))
             
         if(y-1>-1):
-            temp_list.append((y-1,x))
+            if(self.board.get_board()[y-1][x] == None):
+                temp_list.append((y-1,x))
+            elif(self.board.get_board()[y-1][x].get_color() != self.color):
+                temp_list.append((y-1,x))
             
         if(x-1>-1 and y+1<8):
-            temp_list.append((y+1,x-1))
+            if(self.board.get_board()[y+1][x-1] == None):
+                temp_list.append((y+1,x-1))
+            elif(self.board.get_board()[y+1][x-1].get_color() != self.color):
+                temp_list.append((y+1,x-1))
             
         if(x+1<8 and y-1>-1):
-            temp_list.append((y-1,x+1))
+            if(self.board.get_board()[y-1][x+1] == None):
+                temp_list.append((y-1,x+1))
+            elif(self.board.get_board()[y-1][x+1].get_color() != self.color):
+                temp_list.append((y-1,x+1))
             
         return temp_list
         
