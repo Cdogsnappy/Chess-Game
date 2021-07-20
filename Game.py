@@ -169,7 +169,7 @@ class Game(object):
                         print(switcher2.get(move[1]) + str(-move[0]+8), end=" ")
                     print()
                     continue
-                
+                assert len(move) == 5 
                 assert move[0].isalpha() and move[1].isdigit() and move[2] ==";" and move[3].isalpha() and move[4].isdigit()
                
                 val = [8-int(move[1]),switcher.get(move[0]),8-int(move[4]),switcher.get(move[3])]
