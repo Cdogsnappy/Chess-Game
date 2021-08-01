@@ -108,9 +108,11 @@ class Pawn(Piece):
 
         if(self.is_first_move):
              if(self.color == "w"):
-                 temp_list.append((y-2,x))
+                 if(self.board.get_board()[y-2][x] == None):
+                     temp_list.append((y-2,x))
              if(self.color == "b"):
-                 temp_list.append((y+2,x))
+                 if(self.board.get_board()[y+2][x] == None):
+                     temp_list.append((y+2,x))
         if(self.color == "w"):
             if(y != 0):
                 temp_list.append((y-1,x))
